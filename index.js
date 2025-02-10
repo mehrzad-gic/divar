@@ -1,2 +1,2 @@
 // run application
-const Application = require('./app/Configs/sever');
+const Application = require('./src/Configs/sever');
