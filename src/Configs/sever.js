@@ -13,30 +13,32 @@ const path = require('path');
 const createError = require("http-errors");
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
-const ApiRoutes = require("../Routes/ApiRoutes");
-const HomeRoutes = require("../Routes/HomeRoutes");
+const authRouts = require('../Modules/Auth/AuthRoute.js'); 
+const UserModel = require("../Modules/User/model.js");
+const { error } = require("console");
 
 class App {
 
   constructor() {
     autoBind(this);
     this.configuration();
-    this.swagerConfig();
+    this.swaggerConfig();
     this.dbConnection();
     this.routes();
     this.errorHandling();
   }
 
-  swagerConfig() {
+  swaggerConfig() {
+
     // Swagger
     app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(
       swaggerJsDoc({
         swaggerDefinition: {
           openapi: "3.0.0",
           info: {
-            title: "NodeJs Shop",
+            title: "NodeJs Divar",
             version: "2.0.0",
-            description: "nodeJs Shop with mongoDB and ExpressJs",
+            description: "nodeJs App with mongoDB and ExpressJs",
             contact: {
               name: "Mehrzad Mahmodi",
               url: "https://mehrzad20061384.com",
@@ -54,13 +56,12 @@ class App {
                 type: "http",
                 scheme: "bearer",
                 bearerFormat: "JWT",
-
               }
             }
           },
           security: [{ BearerAuth: [] }]
         },
-        apis: ["./app/Routes/*.js"],
+        apis: ["./src/Modules/*/*.yaml"],
       }),
       { explorer: true },
     )
@@ -82,7 +83,6 @@ class App {
     // cookieParser
     app.use(cookieParser());
 
-
     // session
     app.use(session({
       saveUninitialized: true,
@@ -91,19 +91,15 @@ class App {
       cookie: { maxAge: 600000 }
     }));
 
-
     // Static
     app.use(express.static(path.join(__dirname, '..', 'public')));
-
 
     // setView
     app.set('view engine', 'ejs');
     app.set('views', path.join(__dirname, '..', 'app', 'views'));
 
-
     // express-fileUpload Middleware
     app.use(fileUpload());
-
 
   }
 
@@ -128,14 +124,9 @@ class App {
 
   routes() {
 
-    app.get('/', (req, res) => {
+    app.use(authRouts);
 
-      res.send('Hello Friend');
-    })
-
-    app.use(ApiRoutes);
-
-    app.use(HomeRoutes)
+    // app.use(HomeRoutes)
 
     app.listen(process.env.APP_PORT, logger.color("blue").bold().log(`Server listening on port ${process.env.APP_PORT}`));
 

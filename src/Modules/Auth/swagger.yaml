@@ -1,0 +1,281 @@
+swagger: "2.0"
+info:
+  title: API Documentation
+  version: 1.0.0
+tags:
+  - name: Auth
+    description: 🔐 APIs related to user authentication.
+paths:
+
+  /send-otp:
+    post:
+      tags:
+        - Auth
+      summary: Send OTP to a user's email
+      description: |
+        This endpoint sends a 6-character OTP to the user's email.
+        The OTP is valid for 2 minutes.
+        If the user already has a valid OTP, the request will fail.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user.
+                  example: "user@example.com"
+              required:
+                - email
+      responses:
+        '200':
+          description: OTP sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OTP sent successfully
+                  otp:
+                    type: string
+                    description: The generated OTP (for testing purposes).
+                    example: "A1B2C3"
+        '403':
+          description: User not found or unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '429':
+          description: Too many OTP requests (user already has a valid OTP)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OTP already sent. Please wait before requesting a new one.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /check-otp:
+    post:
+      tags:
+        - Auth
+      summary: Verify OTP
+      description: |
+        This endpoint verifies the OTP sent to the user's email.
+        The OTP must be valid and not expired.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: The OTP code to verify.
+                  example: "A1B2C3"
+              required:
+                - code
+      responses:
+        '200':
+          description: OTP verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email has been verified
+        '403':
+          description: Invalid or expired OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OTP has expired
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      description: |
+        This endpoint registers a new user with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the user.
+                  example: "John Doe"
+                email:
+                  type: string
+                  description: The email of the user.
+                  example: "user@example.com"
+                password:
+                  type: string
+                  description: The password of the user.
+                  example: "password123"
+              required:
+                - name
+                - email
+                - password
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User registered successfully
+        '403':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User already exists
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: Login a user
+      description: |
+        This endpoint logs in a user with the provided credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user.
+                  example: "user@example.com"
+                password:
+                  type: string
+                  description: The password of the user.
+                  example: "password123"
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User logged in successfully
+                  token:
+                    type: string
+                    description: JWT token for authentication.
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '403':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid credentials
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: Enter your JWT token in the format `Bearer <token>`
