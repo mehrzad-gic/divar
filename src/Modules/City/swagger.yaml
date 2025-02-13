@@ -1,0 +1,320 @@
+swagger: "2.0"
+
+info:
+  title: City API Documentation
+  version: 1.0.0
+
+tags:
+  - name: City
+    description: 🏙️ APIs related to city management.
+
+paths:
+
+  /cities:
+    get:
+      tags:
+        - City
+      summary: Get all cities
+      description: Retrieve a list of all cities with populated province details.
+      responses:
+        '200':
+          description: A list of cities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/definitions/City'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /create-city:
+    post:
+      tags:
+        - City
+      summary: Create a new city
+      description: Create a new city with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Tehran"
+                province:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+              required:
+                - name
+                - province
+      responses:
+        '201':
+          description: City created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City created successfully
+                  data:
+                    $ref: '#/definitions/City'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Name and province are required.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /city-detail/{slug}:
+    get:
+      tags:
+        - City
+      summary: Get city by slug
+      description: Retrieve a city by its slug with populated province details.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the city to retrieve.
+      responses:
+        '200':
+          description: City found
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/City'
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /update-city/{slug}:
+    put:
+      tags:
+        - City
+      summary: Update city by slug
+      description: Update a city with the provided details.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the city to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated Tehran"
+                status:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: City updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City updated successfully
+                  data:
+                    $ref: '#/definitions/City'
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /delete-city/{slug}:
+    delete:
+      tags:
+        - City
+      summary: Delete city by slug
+      description: Delete a city by its slug.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the city to delete.
+      responses:
+        '200':
+          description: City deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City deleted successfully
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /change-city-status/{slug}:
+    patch:
+      tags:
+        - City
+      summary: Change city status
+      description: Toggle the status of a city by its slug.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the city to change status.
+      responses:
+        '200':
+          description: City status changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City status changed successfully
+                  data:
+                    $ref: '#/definitions/City'
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: City not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+definitions:
+  City:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Tehran"
+      slug:
+        type: string
+        example: "tehran"
+      province:
+        $ref: '#/definitions/Province'
+      status:
+        type: boolean
+        example: true
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+
+  Province:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Tehran Province"
+      slug:
+        type: string
+        example: "tehran-province"
+      status:
+        type: boolean
+        example: true

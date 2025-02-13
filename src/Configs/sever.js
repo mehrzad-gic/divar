@@ -14,8 +14,9 @@ const createError = require("http-errors");
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const authRouts = require('../Modules/Auth/AuthRoute.js'); 
-const UserModel = require("../Modules/User/model.js");
-const { error } = require("console");
+const categoryRoute = require('../Modules/Category/CategoryRoute.js'); 
+const provinceRoute = require('../Modules/Province/ProvinceRoute.js'); 
+const cityRoute = require('../Modules/City/CityRoute.js'); 
 
 class App {
 
@@ -125,6 +126,9 @@ class App {
   routes() {
 
     app.use(authRouts);
+    app.use(categoryRoute);
+    app.use(provinceRoute);
+    app.use(cityRoute);
 
     // app.use(HomeRoutes)
 

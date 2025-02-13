@@ -141,7 +141,6 @@ class AuthController {
         while (await this.checkExistByField('slug', slug)) {
 
             slug += `_${randomChar}`;
-
         }
 
         return slug;

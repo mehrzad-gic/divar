@@ -1,0 +1,244 @@
+swagger: "2.0"
+
+info:
+  title: Province API Documentation
+  version: 1.0.0
+
+tags:
+  - name: Province
+    description: 🌍 APIs related to province management.
+
+paths:
+
+  /provinces:
+    get:
+      tags:
+        - Province
+      summary: Get all provinces
+      description: Retrieve a list of all provinces.
+      responses:
+        '200':
+          description: A list of provinces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Province'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /create-province:
+    post:
+      tags:
+        - Province
+      summary: Create a new province
+      description: Create a new province with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Tehran"
+                code:
+                  type: string
+                  example: "THR"
+                status:
+                  type: boolean
+                  example: true
+              required:
+                - name
+                - code
+
+      responses:
+        '201':
+          description: Province created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Province created successfully
+                  data:
+                    $ref: '#/definitions/Province'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Name, code, and country are required.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /province-detail/{slug}:
+    get:
+      tags:
+        - Province
+      summary: Get province by slug
+      description: Retrieve a province by its slug.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the province to retrieve.
+      responses:
+        '200':
+          description: Province found
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Province'
+        '404':
+          description: Province not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Province not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /update-province/{slug}:
+    put:
+      tags:
+        - Province
+      summary: Update province by slug
+      description: Update a province with the provided details.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the province to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated Tehran"
+                code:
+                  type: string
+                  example: "THR"
+                status:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Province updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Province updated successfully
+                  data:
+                    $ref: '#/definitions/Province'
+        '404':
+          description: Province not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Province not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /delete-province/{slug}:
+    delete:
+      tags:
+        - Province
+      summary: Delete province by slug
+      description: Delete a province by its slug.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the province to delete.
+      responses:
+        '200':
+          description: Province deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Province deleted successfully
+        '404':
+          description: Province not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Province not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message
