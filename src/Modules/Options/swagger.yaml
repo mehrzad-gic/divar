@@ -1,0 +1,308 @@
+swagger: "2.0"
+info:
+  title: Option API Documentation
+  version: 1.0.0
+tags:
+  - name: Option
+    description: ⚙️ APIs related to option management.
+paths:
+  /options:
+    get:
+      tags:
+        - Option
+      summary: Get all options
+      description: Retrieve a list of all options.
+      responses:
+        '200':
+          description: A list of options
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Option'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /create-option:
+    post:
+      tags:
+        - Option
+      summary: Create a new option
+      description: Create a new option with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Color"
+                key:
+                  type: string
+                  example: "color"
+                type:
+                  type: string
+                  enum: ["number", "string", "array", "boolean"]
+                  example: "string"
+                enum:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Red", "Blue", "Green"]
+                guid:
+                  type: string
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                required:
+                  type: boolean
+                  example: true
+                category:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+              required:
+                - title
+                - key
+                - type
+                - category
+      responses:
+        '201':
+          description: Option created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Option created successfully
+                  data:
+                    $ref: '#/definitions/Option'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Title, key, type, and category are required.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /option-detail/{id}:
+    get:
+      tags:
+        - Option
+      summary: Get option by ID
+      description: Retrieve an option by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the option to retrieve.
+      responses:
+        '200':
+          description: Option found
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Option'
+        '404':
+          description: Option not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Option not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /update-option/{id}:
+    put:
+      tags:
+        - Option
+      summary: Update option by ID
+      description: Update an option with the provided details.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the option to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Updated Color"
+                key:
+                  type: string
+                  example: "color"
+                type:
+                  type: string
+                  enum: ["number", "string", "array", "boolean"]
+                  example: "string"
+                enum:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Red", "Blue", "Green", "Yellow"]
+                guid:
+                  type: string
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                required:
+                  type: boolean
+                  example: true
+                category:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+      responses:
+        '200':
+          description: Option updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Option updated successfully
+                  data:
+                    $ref: '#/definitions/Option'
+        '404':
+          description: Option not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Option not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /delete-option/{id}:
+    delete:
+      tags:
+        - Option
+      summary: Delete option by ID
+      description: Delete an option by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the option to delete.
+      responses:
+        '200':
+          description: Option deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Option deleted successfully
+        '404':
+          description: Option not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Option not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+definitions:
+  Option:
+    type: object
+    properties:
+      title:
+        type: string
+        example: "Color"
+      key:
+        type: string
+        example: "color"
+      type:
+        type: string
+        enum: ["number", "string", "array", "boolean"]
+        example: "string"
+      enum:
+        type: array
+        items:
+          type: string
+        example: ["Red", "Blue", "Green"]
+      guid:
+        type: string
+        example: "550e8400-e29b-41d4-a716-446655440000"
+      required:
+        type: boolean
+        example: true
+      category:
+        type: string
+        example: "64f1b2c3e4b0a1b2c3d4e5f6"
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
