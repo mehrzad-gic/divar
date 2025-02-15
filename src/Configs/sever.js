@@ -17,7 +17,10 @@ const authRouts = require('../Modules/Auth/AuthRoute.js');
 const categoryRoute = require('../Modules/Category/CategoryRoute.js'); 
 const provinceRoute = require('../Modules/Province/ProvinceRoute.js'); 
 const cityRoute = require('../Modules/City/CityRoute.js'); 
-const optionRoute = require('../Modules/Options/OptionRoute.js'); 
+const optionRoute = require('../Modules/Options/OptionRoute.js');
+const PostRoute = require('../Modules/Post/PostRoute.js');
+const Auth = require("../Middlewares/Auth.js");
+const Verify = require("../Middlewares/Verify.js");
 
 class App {
 
@@ -131,6 +134,7 @@ class App {
     app.use(provinceRoute);
     app.use(cityRoute);
     app.use(optionRoute);
+    app.use('/posts', Verify, PostRoute);
 
     // app.use(HomeRoutes)
 

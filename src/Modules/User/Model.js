@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, mongoose } = require('mongoose');
 
 const OTPSchema = new Schema({
   code: { type: String, required: true },
@@ -16,6 +16,6 @@ const UserSchema = new Schema({
 }, { timestamps: true }); // Fix typo: timestamps (not timeStamps)
 
 // Create and export the User model
-const UserModel = model('user', UserSchema);
+const UserModel = mongoose.models.User || mongoose.model('User', UserSchema);
 
 module.exports = UserModel;

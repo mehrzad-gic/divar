@@ -17,24 +17,6 @@ class AuthController {
 
         try {
 
-            // Verify token
-            const token = req.headers['authorization'];
-            if (!token) throw new createHttpError.Forbidden('Access denied. No token provided.');
-
-            const tokenParts = token.split(' ');
-            if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
-                throw new createHttpError.Forbidden('Invalid token format.');
-            }
-            const userPayload = jwt.verify(tokenParts[1], process.env.SECRET_KEY);
-            if (!userPayload) throw new createHttpError.Forbidden('Invalid token.');
-
-            
-            // Verify user
-            const { code } = req.body;
-            const user = await UserModel.findOne({ email: userPayload.email });
-            if (!user) throw new createHttpError.NotFound(_404);
-
-
             // Verify OTP code
             const now = new Date().getTime();
             if (user.otp.expire < now) throw new createHttpError.Forbidden(otp_has_expired);

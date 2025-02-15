@@ -1,0 +1,243 @@
+swagger: "2.0"
+
+info:
+  title: Post API Documentation
+  version: 1.0.0
+
+tags:
+  - name: Post
+    description: 📝 APIs related to post management.
+
+paths:
+
+  /posts:
+    get:
+      tags:
+        - Post
+      summary: Get all posts
+      description: Retrieve a list of all posts with populated user, category, and city details.
+      responses:
+        '200':
+          description: A list of posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Post'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /posts/create-post:
+    post:
+      tags:
+        - Post
+      summary: Create a new post
+      description: Create a new post with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Beautiful Apartment for Sale"
+                userId:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+                amount:
+                  type: number
+                  example: 500000
+                content:
+                  type: string
+                  example: "This is a beautiful apartment located in the city center."
+                category:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+                city:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+                district:
+                  type: string
+                  example: "District 1"
+                address:
+                  type: string
+                  example: "123 Main St"
+                coordinate:
+                  type: array
+                  items:
+                    type: number
+                  example: [51.215485487, 52.687524154]
+                images:
+                  type: array
+                  items:
+                    type: string
+                  example: ["image1.jpg", "image2.jpg"]
+                options:
+                  type: object
+                  example: { "bedrooms": 3, "bathrooms": 2 }
+              required:
+                - title
+                - userId
+                - amount
+                - content
+                - category
+                - coordinate
+      responses:
+        '201':
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post created successfully
+                  data:
+                    $ref: '#/definitions/Post'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Title, userId, amount, content, category, and coordinate are required.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /posts/post-detail/{slug}:
+    get:
+      tags:
+        - Post
+      summary: Get post by slug
+      description: Retrieve a post by its slug with populated user, category, and city details.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the post to retrieve.
+      responses:
+        '200':
+          description: Post found
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Post'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /posts/update-post/{slug}:
+    put:
+      tags:
+        - Post
+      summary: Update post by slug
+      description: Update a post with the provided details.
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          type: string
+          description: The slug of the post to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Updated Apartment for Sale"
+                amount:
+                  type: number
+                  example: 550000
+                content:
+                  type: string
+                  example: "This is an updated description of the apartment."
+                category:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+                city:
+                  type: string
+                  example: "64f1b2c3e4b0a1b2c3d4e5f6"
+                district:
+                  type: string
+                  example: "District 2"
+                address:
+                  type: string
+                  example: "456 Main St"
+                coordinate:
+                  type: array
+                  items:
+                    type: number
+                  example: [51.215485487, 52.687524154]
+                images:
+                  type: array
+                  items:
+                    type: string
+                  example: ["image1.jpg", "image2.jpg", "image3.jpg"]
+                options:
+                  type: object
+                  example: { "bedrooms": 4, "bathrooms": 3 }
+      responses:
+        '200':
+          description: Post updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post updated successfully
+                  data:
+                    $ref: '#/definitions/Post'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
